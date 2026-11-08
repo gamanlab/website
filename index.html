@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gamanlab</title>
+<meta name="description" content="Gamanlab: tim otomasi industri yang menjembatani OT dan IT, membuka jalan bagi talenta baru, dan peduli pada alam.">
+<link rel="canonical" href="https://gamanlab.id/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://gamanlab.id/">
+<meta property="og:title" content="Gamanlab">
+<meta property="og:description" content="Otomasi industri, elektronika, dan AI. Menjembatani OT dan IT, membuka jalan bagi talenta baru, dan peduli pada alam.">
+<meta property="og:image" content="https://gamanlab.id/logo.png">
+<meta name="theme-color" content="#0b1d2e">
+<link rel="icon" href="logo.png" type="image/png">
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+[hidden]:not([hidden=until-found i]) { display: none !important; }
+/* Layout: panel kontrol industri. Bilah navigasi seperti header HMI, bagian bernomor seperti tag instrumen. Warna dari logo: biru (teknologi) dan hijau toska (lestari). */
+:root {
+  --bg: #f2f6f9;
+  --surface: #ffffff;
+  --panel: #e4ebf1;
+  --fg: #13202d;
+  --muted: #55636f;
+  --line: #cbd6e0;
+  --accent: #1976d3;
+  --accent-soft: #e3eefb;
+  --on-accent: #ffffff;
+  --ok: #008081;
+  --ok-soft: #dff1f0;
+  --ink-strong: #0b1d2e;
+  --on-ink: #eef3f7;
+  --brand-blue: #1976d3;
+  --brand-teal: #008081;
+  --glow: #4fc3c1;
+  --f-display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --f-body: "Barlow", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --s-1: .8125rem; --s0: 1rem; --s1: 1.25rem; --s2: 1.75rem; --s3: 2.5rem; --s4: clamp(2.75rem, 7vw, 4.75rem);
+  --wrap: 72rem;
+}
+/* Tampilan selalu terang, tidak mengikuti mode gelap perangkat */
+:root, :root[data-theme="dark"] { color-scheme: light; }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 1.0625rem; line-height: 1.6; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--f-display); line-height: 1.05; text-wrap: balance; margin: 0; letter-spacing: .005em; }
+h2 { font-size: var(--s3); font-weight: 700; text-transform: uppercase; }
+h3 { font-size: var(--s1); font-weight: 600; }
+p { margin: 0; max-width: 62ch; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: 1rem; }
+@media (min-width: 40rem) { .wrap { padding-inline: 2rem; } }
+.tag { font-family: var(--f-mono); font-size: var(--s-1); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.tag b { color: var(--accent); font-weight: 500; }
+.sample { display: inline-block; font-family: var(--f-mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; padding: .1rem .4rem; border: 1px dashed var(--accent); color: var(--accent); border-radius: 3px; vertical-align: middle; }
+
+/* Header */
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--ink-strong); color: var(--on-ink); border-bottom: 3px solid var(--brand-teal); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 3.75rem; }
+.top .brand { margin-right: auto; }
+nav.menu { order: 2; }
+.brand { display: flex; align-items: center; gap: .6rem; text-decoration: none; font-family: var(--f-display); font-weight: 700; font-size: 1.5rem; letter-spacing: .04em; text-transform: uppercase; }
+.brand img { height: 2.25rem; width: auto; display: block; }
+nav.menu ul { list-style: none; margin: 0; padding: 0; display: flex; gap: 1.25rem; }
+nav.menu a { text-decoration: none; font-family: var(--f-display); font-weight: 500; font-size: 1.05rem; letter-spacing: .05em; text-transform: uppercase; opacity: .85; }
+nav.menu a:hover { opacity: 1; color: var(--glow); }
+.menu-btn { display: none; background: none; border: 1px solid rgba(238,242,244,.35); color: inherit; font-family: var(--f-mono); font-size: .8rem; padding: .4rem .7rem; border-radius: 4px; cursor: pointer; }
+@media (max-width: 72rem) {
+  .menu-btn { display: block; }
+  nav.menu { position: absolute; left: 0; right: 0; top: 100%; background: var(--ink-strong); border-bottom: 3px solid var(--brand-teal); }
+  nav.menu ul { flex-direction: column; gap: 0; padding: .5rem 1rem 1rem; }
+  nav.menu a { display: block; padding: .6rem 0; border-bottom: 1px solid rgba(238,242,244,.1); }
+}
+
+/* Hero */
+.hero { background: var(--ink-strong); color: var(--on-ink); padding-block: 3.5rem 4rem; overflow: hidden; }
+.hero .wrap { display: grid; gap: 2.5rem; grid-template-columns: 1fr; align-items: center; }
+@media (min-width: 56rem) { .hero .wrap { grid-template-columns: 1.15fr .85fr; } }
+.hero .tag { color: #9aa8b3; }
+.hero h1 { font-size: var(--s4); text-transform: uppercase; font-weight: 700; margin-block: .75rem 1.25rem; }
+.hero h1 em { font-style: normal; color: var(--glow); }
+.hero p { color: #c3ccd3; font-size: 1.15rem; }
+.cta { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+.btn { display: inline-block; text-decoration: none; font-family: var(--f-display); font-weight: 600; font-size: 1.1rem; letter-spacing: .06em; text-transform: uppercase; padding: .7rem 1.4rem; border-radius: 4px; border: 2px solid var(--brand-blue); }
+.btn.primary { background: var(--brand-blue); color: #ffffff; }
+.btn.ghost { color: var(--glow); border-color: var(--glow); }
+.btn:hover { filter: brightness(1.08); }
+.rung { width: 100%; max-width: 100%; height: auto; }
+.rung .wire { stroke: #5d6f7c; stroke-width: 2; fill: none; }
+.rung .live { stroke: #3d93e8; stroke-width: 2.5; fill: none; stroke-dasharray: 6 8; animation: flow 1.6s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -28; } }
+.rung text { font-family: var(--f-mono); font-size: 11px; fill: #9aa8b3; }
+.rung .coil { fill: none; stroke: var(--glow); stroke-width: 2.5; }
+
+/* Section */
+section.block { padding-block: 4.5rem; border-bottom: 1px solid var(--line); scroll-margin-top: 4rem; }
+.head { display: grid; gap: .75rem; margin-bottom: 2.5rem; }
+.head p { color: var(--muted); }
+.alt { background: var(--panel); }
+
+/* Tentang */
+.about { display: grid; gap: 2.5rem; grid-template-columns: 1fr; }
+@media (min-width: 52rem) { .about { grid-template-columns: 1.2fr 1fr; } }
+.about .text { display: grid; gap: 1rem; min-width: 0; }
+.values { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; border-top: 2px solid var(--fg); }
+.values li { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1rem; padding: .9rem 0; border-bottom: 1px solid var(--line); }
+.values b { font-family: var(--f-display); font-size: 1.2rem; text-transform: uppercase; letter-spacing: .04em; }
+.values span { color: var(--muted); }
+
+/* Keahlian */
+.skills { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.skill { background: var(--surface); padding: 1.5rem; display: grid; gap: .6rem; align-content: start; min-width: 0; }
+.skill .tag { color: var(--accent); }
+.skill p { color: var(--muted); font-size: .98rem; }
+
+/* OT-IT */
+.isa { display: grid; gap: .5rem; }
+.lvl { display: grid; grid-template-columns: 5.5rem 1fr; gap: 1rem; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: .9rem 1.1rem; }
+.lvl .n { font-family: var(--f-mono); font-size: .8rem; color: var(--muted); }
+.lvl h3 { font-size: 1.15rem; }
+.lvl p { color: var(--muted); font-size: .95rem; }
+.lvl.bridge { border: 2px solid var(--accent); background: var(--accent-soft); }
+.lvl.bridge .n { color: var(--accent); font-weight: 500; }
+.isa-note { margin-top: 1.5rem; color: var(--muted); font-size: .95rem; }
+
+/* Kolaborasi */
+.partners { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); }
+.partner-hero { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr; gap: 1.5rem 2.5rem; align-items: center; background: var(--surface); border: 2px solid var(--accent); border-radius: 4px; padding: 1.75rem; }
+@media (min-width: 44rem) { .partner-hero { grid-template-columns: 14rem 1fr; } }
+.partner-hero img { width: 100%; max-width: 14rem; height: auto; justify-self: center; }
+.partner-hero .ph-text { display: grid; gap: .6rem; min-width: 0; }
+.partner-hero .tag { color: var(--accent); }
+.partner-hero h3 { font-size: var(--s2); }
+.partner-hero p { color: var(--muted); }
+.plink { font-family: var(--f-mono); font-size: .85rem; color: var(--accent); text-decoration: none; justify-self: start; }
+.plink:hover { text-decoration: underline; }
+.partner-card { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 1.5rem; display: grid; gap: .6rem; justify-items: center; align-content: center; text-align: center; min-width: 0; }
+.partner-card img { height: 5rem; width: auto; max-width: 100%; object-fit: contain; }
+.partner-card h3 { font-size: 1.1rem; }
+.partner-card .plink { justify-self: center; }
+.partner-card.more { border-style: dashed; background: transparent; }
+.partner-card.more strong { font-family: var(--f-display); font-size: var(--s3); text-transform: uppercase; color: var(--accent); line-height: 1; }
+.partner-card.more p { color: var(--muted); }
+.logo-slot { aspect-ratio: 3 / 2; max-width: 100%; border: 1px dashed var(--line); border-radius: 4px; display: grid; place-items: center; color: var(--muted); font-family: var(--f-mono); font-size: .8rem; background: var(--surface); }
+.collab-modes { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); margin-top: 2.5rem; }
+.collab-modes div { display: grid; gap: .4rem; border-top: 2px solid var(--fg); padding-top: 1rem; }
+.collab-modes p { color: var(--muted); }
+
+/* Karier */
+.career { display: grid; gap: 2.5rem; grid-template-columns: 1fr; }
+@media (min-width: 52rem) { .career { grid-template-columns: 1fr 1fr; } }
+.path { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; counter-reset: step; }
+.path li { counter-increment: step; display: grid; grid-template-columns: 3rem 1fr; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+.path li::before { content: counter(step, decimal-leading-zero); font-family: var(--f-mono); color: var(--accent); font-size: .9rem; padding-top: .2rem; }
+.path h3 { font-size: 1.15rem; }
+.path p { color: var(--muted); font-size: .95rem; }
+.quote { background: var(--ink-strong); color: var(--on-ink); padding: 2rem; border-radius: 4px; display: grid; gap: 1rem; align-content: start; }
+.quote blockquote { margin: 0; font-family: var(--f-display); font-size: var(--s2); line-height: 1.15; }
+.quote p { color: #c3ccd3; }
+
+/* Sosial & Lingkungan */
+.green .tag b { color: var(--ok); }
+.eco { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+.eco article { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 1.5rem; display: grid; gap: .6rem; align-content: start; }
+.eco .tag { color: var(--ok); }
+.eco p { color: var(--muted); font-size: .98rem; }
+.metric { display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 2rem; padding: 1.25rem 1.5rem; background: var(--ok-soft); border-radius: 4px; }
+.metric div { display: grid; }
+.metric strong { font-family: var(--f-display); font-size: var(--s2); font-variant-numeric: tabular-nums; color: var(--ok); }
+.metric span { font-size: .9rem; color: var(--muted); }
+
+/* Kontak */
+.contact { display: grid; gap: 2.5rem; grid-template-columns: 1fr; }
+@media (min-width: 52rem) { .contact { grid-template-columns: 1fr 1.2fr; } }
+.contact dl { margin: 0; display: grid; gap: 1rem; }
+.contact dt { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.contact dd { margin: 0; font-size: 1.1rem; user-select: all; }
+form { display: grid; gap: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 1.5rem; min-width: 0; }
+label { display: grid; gap: .35rem; font-size: .9rem; font-weight: 500; }
+input, select, textarea { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: .6rem .75rem; width: 100%; }
+textarea { min-height: 7rem; resize: vertical; }
+form button { justify-self: start; cursor: pointer; background: var(--accent); color: var(--on-accent); border: 0; font-family: var(--f-display); font-weight: 600; font-size: 1.1rem; letter-spacing: .06em; text-transform: uppercase; padding: .7rem 1.4rem; border-radius: 4px; }
+.form-msg { font-size: .9rem; color: var(--ok); }
+.form-msg.err { color: #d64545; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+form { position: relative; }
+
+/* Dukungan */
+.support { display: grid; gap: 2.5rem; grid-template-columns: 1fr; }
+@media (min-width: 56rem) { .support { grid-template-columns: 1.3fr 1fr; } }
+.cycle { list-style: none; padding: 0; margin: 0; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.cycle li { background: var(--surface); padding: 1.25rem 1.5rem; display: grid; gap: .4rem; align-content: start; min-width: 0; }
+.cycle .tag { color: var(--accent); }
+.cycle p { color: var(--muted); font-size: .95rem; }
+.sla { background: var(--ink-strong); color: var(--on-ink); border-radius: 4px; padding: 1.5rem; display: grid; gap: 1rem; align-content: start; min-width: 0; }
+.sla h3 { font-size: 1.4rem; text-transform: uppercase; letter-spacing: .03em; }
+.sla table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+.sla th, .sla td { text-align: left; padding: .6rem 0; border-bottom: 1px solid rgba(238,242,244,.14); vertical-align: top; }
+.sla th { font-family: var(--f-mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: #9fb0bf; font-weight: 400; }
+.sla td:last-child { font-family: var(--f-mono); color: var(--glow); white-space: nowrap; padding-left: 1rem; font-variant-numeric: tabular-nums; }
+.sla .pill { display: inline-block; width: .6rem; height: .6rem; border-radius: 50%; margin-right: .5rem; vertical-align: middle; }
+.sla p { color: #c3ccd3; font-size: .92rem; }
+.promise { margin-top: 2.5rem; display: flex; flex-wrap: wrap; gap: .75rem 2rem; padding-top: 1.5rem; border-top: 2px solid var(--fg); }
+.promise span { font-family: var(--f-display); font-weight: 600; font-size: 1.15rem; text-transform: uppercase; letter-spacing: .04em; }
+.promise > span::before { content: "✓"; color: var(--ok); margin-right: .45rem; }
+
+footer { background: var(--ink-strong); color: #9aa8b3; padding-block: 2rem; font-size: .9rem; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; }
+
+/* Bahasa */
+body [lang="id"] { display: none; }
+html[data-lang="id"] body [lang="id"] { display: revert; }
+html[data-lang="id"] body [lang="en"] { display: none; }
+.top-right { display: flex; align-items: center; gap: .75rem; order: 3; }
+.lang-switch { display: flex; border: 1px solid rgba(238,242,244,.3); border-radius: 4px; overflow: hidden; }
+.lang-switch button { background: none; border: 0; color: inherit; font-family: var(--f-mono); font-size: .78rem; letter-spacing: .06em; padding: .35rem .6rem; cursor: pointer; opacity: .7; }
+.lang-switch button[aria-pressed="true"] { background: var(--brand-teal); opacity: 1; color: #ffffff; }
+label > span { display: block; }
+
+/* Daun beringin di hero */
+.hero { position: relative; isolation: isolate; }
+.hero > .wrap { position: relative; z-index: 1; }
+.hero .region { position: absolute; z-index: 0; right: 1%; top: 50%; transform: translateY(-50%); height: 94%; width: auto; aspect-ratio: 800 / 849; max-width: none; pointer-events: none; }
+@media (max-width: 56rem) { .hero .region { right: -12%; height: 70%; top: auto; bottom: 0; transform: none; opacity: .7; } }
+.leaves { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.leaves .blade { fill: var(--glow); fill-opacity: .05; stroke: var(--glow); stroke-opacity: .26; stroke-width: 1.3; }
+.leaves .vein { fill: none; stroke: var(--glow); stroke-opacity: .22; stroke-width: 1; stroke-linecap: round; }
+/* Serat daun sebagai jalur energi: cahaya lembut + denyut yang mengalir dari pangkal ke ujung */
+.leaves .vein-glow { fill: none; stroke: #7fe6ff; stroke-opacity: .3; stroke-width: 3.2; stroke-linecap: round; animation: vein-breathe 4.8s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.leaves .vein-flow { fill: none; stroke: #d6faff; stroke-opacity: .9; stroke-width: 1.6; stroke-linecap: round; stroke-dasharray: 6 94; stroke-dashoffset: 100; animation: vein-flow 3.2s linear infinite; animation-delay: var(--d, 0s); }
+.leaves .vein-flow.side { stroke-dasharray: 3 40; stroke-dashoffset: 43; stroke-opacity: .5; animation: vein-flow-side 2.4s linear infinite; animation-delay: var(--d, 0s); }
+.leaves .core { fill: #b8f4ff; fill-opacity: .55; animation: vein-breathe 4.8s ease-in-out infinite; animation-delay: var(--d, 0s); }
+@keyframes vein-flow { to { stroke-dashoffset: 0; } }
+@keyframes vein-flow-side { to { stroke-dashoffset: 0; } }
+@keyframes vein-breathe { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+.river-flow { animation: river-flow 2.8s linear infinite; }
+@keyframes river-flow { to { stroke-dashoffset: 0; } }
+.ant-heart { animation: vein-breathe 2.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .leaves .vein-flow, .region .vein-flow { display: none; } .river-flow { animation: none; } }
+.leaves .twig { fill: none; stroke: var(--glow); stroke-opacity: .16; stroke-width: 1.4; }
+
+/* Produk */
+.products { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+.product { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; display: grid; grid-template-rows: auto 1fr; overflow: hidden; min-width: 0; }
+.product .shot { aspect-ratio: 16 / 9; max-width: 100%; background: var(--panel); display: grid; place-items: center; color: var(--muted); font-family: var(--f-mono); font-size: .75rem; letter-spacing: .06em; border-bottom: 1px solid var(--line); }
+.product .body { padding: 1.25rem 1.5rem 1.5rem; display: grid; gap: .6rem; align-content: start; }
+.product .tag { color: var(--accent); }
+.product.featured { border: 2px solid var(--accent); }
+.proof { display: flex; align-items: baseline; gap: .6rem; }
+.proof strong { font-family: var(--f-display); font-size: var(--s3); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.proof span { font-size: .95rem; color: var(--muted); }
+.head.sub { margin-top: 3.5rem; }
+.head.sub h2 { font-size: var(--s2); }
+.solutions { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); }
+.solution { display: grid; gap: .6rem; align-content: start; border-top: 2px solid var(--fg); padding-top: 1rem; min-width: 0; }
+.solution .tag { color: var(--accent); }
+.solution p { color: var(--muted); font-size: .95rem; }
+.solution ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: .4rem; }
+.solution li { font-family: var(--f-mono); font-size: .72rem; padding: .15rem .5rem; border: 1px solid var(--line); border-radius: 3px; color: var(--muted); }
+.product.featured h3 { font-size: 1.5rem; }
+.product p { color: var(--muted); font-size: .95rem; }
+.product ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: .4rem; }
+.product li { font-family: var(--f-mono); font-size: .72rem; padding: .15rem .5rem; border: 1px solid var(--line); border-radius: 3px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#beranda"><img src="logo.png" alt="" width="125" height="160">Gamanlab</a>
+    <div class="top-right">
+      <div class="lang-switch" role="group" aria-label="Language / Bahasa">
+        <button type="button" id="lang-en" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" id="lang-id" data-lang="id" aria-pressed="false">ID</button>
+      </div>
+      <button class="menu-btn" id="menu-btn" aria-expanded="false" aria-controls="menu">MENU</button>
+    </div>
+    <nav class="menu" id="menu">
+      <ul>
+        <li><a href="#tentang"><span lang="en">About</span><span lang="id">Tentang</span></a></li>
+        <li><a href="#keahlian"><span lang="en">Expertise</span><span lang="id">Keahlian</span></a></li>
+        <li><a href="#produk"><span lang="en">Products</span><span lang="id">Produk</span></a></li>
+        <li><a href="#ot-it">OT–IT</a></li>
+        <li><a href="#dukungan"><span lang="en">Support</span><span lang="id">Dukungan</span></a></li>
+        <li><a href="#kolaborasi"><span lang="en">Partners</span><span lang="id">Kolaborasi</span></a></li>
+        <li><a href="#karier"><span lang="en">Careers</span><span lang="id">Karier</span></a></li>
+        <li><a href="#lestari"><span lang="en">Community</span><span lang="id">Sosial &amp; Alam</span></a></li>
+        <li><a href="#kontak"><span lang="en">Contact</span><span lang="id">Kontak</span></a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="beranda">
+    <svg class="region" viewBox="-60 -40 800 849" preserveAspectRatio="xMaxYMid meet" aria-hidden="true" focusable="false">
+      <image href="hero-region.webp" x="0" y="0" width="608" height="769" opacity="0.2"/>
+      <g class="river">
+        <path d="M154 497 C136 506 113 516 96 528 C80 540 70 556 64 573 C58 592 52 612 42 632 C34 650 26 676 22 712" fill="none" stroke="#7fe6ff" stroke-opacity="0.04" stroke-width="4" stroke-linecap="round"/>
+        <path d="M154 497 C136 506 113 516 96 528 C80 540 70 556 64 573 C58 592 52 612 42 632 C34 650 26 676 22 712" fill="none" stroke="#7fe6ff" stroke-opacity="0.07" stroke-width="0.9" stroke-linecap="round"/>
+        <path class="river-flow" d="M154 497 C136 506 113 516 96 528 C80 540 70 556 64 573 C58 592 52 612 42 632 C34 650 26 676 22 712" pathLength="100" fill="none" stroke="#d6faff" stroke-opacity="0.2" stroke-width="0.9" stroke-linecap="round" stroke-dasharray="4 16" stroke-dashoffset="20"/>
+      </g>
+      <g class="ant" transform="translate(436 592) scale(1.35)" style="--d:-0.6s">
+        <ellipse cx="-27" cy="0" rx="16" ry="11" fill="#4fc3c1" fill-opacity="0.06" stroke="#4fc3c1" stroke-opacity="0.45" stroke-width="1.3"/>
+        <circle cx="-8.5" cy="2" r="3" fill="#4fc3c1" fill-opacity="0.06" stroke="#4fc3c1" stroke-opacity="0.45" stroke-width="1.3"/>
+        <ellipse cx="4" cy="0" rx="9" ry="6" fill="#4fc3c1" fill-opacity="0.06" stroke="#4fc3c1" stroke-opacity="0.45" stroke-width="1.3"/>
+        <circle cx="22" cy="-4" r="10" fill="#4fc3c1" fill-opacity="0.06" stroke="#4fc3c1" stroke-opacity="0.45" stroke-width="1.3"/>
+        <path d="M26 -12 Q34 -22 44 -20 M21 -13 Q26 -27 40 -27 M0 4 L-9 13 L-16 22 M4 5 L3 15 L-1 24 M8 4 L16 13 L23 21" fill="none" stroke="#4fc3c1" stroke-opacity="0.4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M-30 -10 Q-26 0 -30 10 M-22 -9 Q-18 0 -22 9 M-38 -6 Q-35 0 -38 6" fill="none" stroke="#4fc3c1" stroke-opacity="0.4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path class="vein-glow" d="M26 -12 Q34 -22 44 -20 M21 -13 Q26 -27 40 -27 M0 4 L-9 13 L-16 22 M4 5 L3 15 L-1 24 M8 4 L16 13 L23 21 M-30 -10 Q-26 0 -30 10 M-22 -9 Q-18 0 -22 9 M-38 -6 Q-35 0 -38 6" fill="none" stroke="#7fe6ff" stroke-opacity="0.28" stroke-width="3" stroke-linecap="round"/>
+        <path class="vein-flow side" d="M26 -12 Q34 -22 44 -20 M21 -13 Q26 -27 40 -27 M0 4 L-9 13 L-16 22 M4 5 L3 15 L-1 24 M8 4 L16 13 L23 21" fill="none" stroke="#d6faff" stroke-opacity="0.8" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="3 40" stroke-dashoffset="43"/>
+        <path d="M23.2 -6.6 Q25.6 -10.2 28 -6.6" fill="none" stroke="#d6faff" stroke-opacity="0.95" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M21 -0.5 Q26.5 7.5 31.8 -1.5 Q26.5 2.5 21 -0.5 Z" fill="#d6faff" fill-opacity="0.85" stroke="#d6faff" stroke-opacity="0.9" stroke-width="1" stroke-linejoin="round"/>
+        <circle cx="19" cy="-0.5" r="1.6" fill="#7fe6ff" fill-opacity="0.35"/>
+      </g>
+      <g class="ant" transform="translate(568 592) scale(-1.35 1.35)" style="--d:-1.2s">
+        <ellipse cx="-27" cy="0" rx="16" ry="11" fill="#4fc3c1" fill-opacity="0.06" stroke="#4fc3c1" stroke-opacity="0.45" stroke-width="1.3"/>
+        <circle cx="-8.5" cy="2" r="3" fill="#4fc3c1" fill-opacity="0.06" stroke="#4fc3c1" stroke-opacity="0.45" stroke-width="1.3"/>
+        <ellipse cx="4" cy="0" rx="9" ry="6" fill="#4fc3c1" fill-opacity="0.06" stroke="#4fc3c1" stroke-opacity="0.45" stroke-width="1.3"/>
+        <circle cx="22" cy="-4" r="10" fill="#4fc3c1" fill-opacity="0.06" stroke="#4fc3c1" stroke-opacity="0.45" stroke-width="1.3"/>
+        <path d="M26 -12 Q34 -22 44 -20 M21 -13 Q26 -27 40 -27 M0 4 L-9 13 L-16 22 M4 5 L3 15 L-1 24 M8 4 L16 13 L23 21" fill="none" stroke="#4fc3c1" stroke-opacity="0.4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M-30 -10 Q-26 0 -30 10 M-22 -9 Q-18 0 -22 9 M-38 -6 Q-35 0 -38 6" fill="none" stroke="#4fc3c1" stroke-opacity="0.4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path class="vein-glow" d="M26 -12 Q34 -22 44 -20 M21 -13 Q26 -27 40 -27 M0 4 L-9 13 L-16 22 M4 5 L3 15 L-1 24 M8 4 L16 13 L23 21 M-30 -10 Q-26 0 -30 10 M-22 -9 Q-18 0 -22 9 M-38 -6 Q-35 0 -38 6" fill="none" stroke="#7fe6ff" stroke-opacity="0.28" stroke-width="3" stroke-linecap="round"/>
+        <path class="vein-flow side" d="M26 -12 Q34 -22 44 -20 M21 -13 Q26 -27 40 -27 M0 4 L-9 13 L-16 22 M4 5 L3 15 L-1 24 M8 4 L16 13 L23 21" fill="none" stroke="#d6faff" stroke-opacity="0.8" stroke-width="1.4" stroke-linecap="round" stroke-dasharray="3 40" stroke-dashoffset="43"/>
+        <path d="M23.2 -6.6 Q25.6 -10.2 28 -6.6" fill="none" stroke="#d6faff" stroke-opacity="0.95" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M21 -0.5 Q26.5 7.5 31.8 -1.5 Q26.5 2.5 21 -0.5 Z" fill="#d6faff" fill-opacity="0.85" stroke="#d6faff" stroke-opacity="0.9" stroke-width="1" stroke-linejoin="round"/>
+        <circle cx="19" cy="-0.5" r="1.6" fill="#7fe6ff" fill-opacity="0.35"/>
+      </g>
+      <g class="ant-heart" transform="translate(502 540) scale(1.4)">
+        <path d="M0 -8 C2.6 -3.8 5 -0.6 5 2.6 A5 5 0 0 1 -5 2.6 C-5 -0.6 -2.6 -3.8 0 -8 Z" fill="#7fe6ff" fill-opacity="0.35" stroke="#d6faff" stroke-opacity="0.85" stroke-width="1"/>
+        <path d="M-2.4 1.6 Q-2.6 3.8 -0.6 5" fill="none" stroke="#ffffff" stroke-opacity="0.8" stroke-width="0.9" stroke-linecap="round"/>
+      </g>
+    </svg>
+    <svg class="leaves" viewBox="0 0 1200 600" preserveAspectRatio="xMaxYMid slice" aria-hidden="true" focusable="false">
+      <g class="leaf" transform="translate(1152 44) rotate(-80) scale(0.5)" style="--d:0s">
+        <path class="blade" fill="#4fc3c1" fill-opacity="0.05" stroke="#4fc3c1" stroke-opacity="0.26" stroke-width="1.3" d="M0 52 C-6 56 -30 56 -40 38 C-48 22 -46 -10 -36 -32 C-26 -52 -12 -62 0 -63 C12 -62 26 -52 36 -32 C46 -10 48 22 40 38 C30 56 6 56 0 52 Z"/>
+          <path class="vein" fill="none" stroke="#4fc3c1" stroke-opacity="0.22" stroke-width="1" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-glow" fill="none" stroke="#7fe6ff" stroke-opacity="0.3" stroke-width="3.2" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-flow" fill="none" stroke="#d6faff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" pathLength="100" d="M0 68 L0 -58"/>
+          <path class="vein-flow side" fill="none" stroke="#d6faff" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round" d="M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <circle class="core" fill="#b8f4ff" fill-opacity="0.55" cx="0" cy="50" r="2.6"/>
+      </g>
+      <g class="leaf" transform="translate(1096 66) rotate(58) scale(0.46)" style="--d:-0.7s">
+        <path class="blade" fill="#4fc3c1" fill-opacity="0.05" stroke="#4fc3c1" stroke-opacity="0.26" stroke-width="1.3" d="M0 52 C-6 56 -30 56 -40 38 C-48 22 -46 -10 -36 -32 C-26 -52 -12 -62 0 -63 C12 -62 26 -52 36 -32 C46 -10 48 22 40 38 C30 56 6 56 0 52 Z"/>
+          <path class="vein" fill="none" stroke="#4fc3c1" stroke-opacity="0.22" stroke-width="1" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-glow" fill="none" stroke="#7fe6ff" stroke-opacity="0.3" stroke-width="3.2" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-flow" fill="none" stroke="#d6faff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" pathLength="100" d="M0 68 L0 -58"/>
+          <path class="vein-flow side" fill="none" stroke="#d6faff" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round" d="M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <circle class="core" fill="#b8f4ff" fill-opacity="0.55" cx="0" cy="50" r="2.6"/>
+      </g>
+      <g class="leaf" transform="translate(1046 86) rotate(-55) scale(0.5)" style="--d:-1.4s">
+        <path class="blade" fill="#4fc3c1" fill-opacity="0.05" stroke="#4fc3c1" stroke-opacity="0.26" stroke-width="1.3" d="M0 52 C-6 56 -30 56 -40 38 C-48 22 -46 -10 -36 -32 C-26 -52 -12 -62 0 -63 C12 -62 26 -52 36 -32 C46 -10 48 22 40 38 C30 56 6 56 0 52 Z"/>
+          <path class="vein" fill="none" stroke="#4fc3c1" stroke-opacity="0.22" stroke-width="1" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-glow" fill="none" stroke="#7fe6ff" stroke-opacity="0.3" stroke-width="3.2" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-flow" fill="none" stroke="#d6faff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" pathLength="100" d="M0 68 L0 -58"/>
+          <path class="vein-flow side" fill="none" stroke="#d6faff" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round" d="M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <circle class="core" fill="#b8f4ff" fill-opacity="0.55" cx="0" cy="50" r="2.6"/>
+      </g>
+      <g class="leaf" transform="translate(990 116) rotate(70) scale(0.42)" style="--d:-2.1s">
+        <path class="blade" fill="#4fc3c1" fill-opacity="0.05" stroke="#4fc3c1" stroke-opacity="0.26" stroke-width="1.3" d="M0 52 C-6 56 -30 56 -40 38 C-48 22 -46 -10 -36 -32 C-26 -52 -12 -62 0 -63 C12 -62 26 -52 36 -32 C46 -10 48 22 40 38 C30 56 6 56 0 52 Z"/>
+          <path class="vein" fill="none" stroke="#4fc3c1" stroke-opacity="0.22" stroke-width="1" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-glow" fill="none" stroke="#7fe6ff" stroke-opacity="0.3" stroke-width="3.2" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-flow" fill="none" stroke="#d6faff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" pathLength="100" d="M0 68 L0 -58"/>
+          <path class="vein-flow side" fill="none" stroke="#d6faff" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round" d="M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <circle class="core" fill="#b8f4ff" fill-opacity="0.55" cx="0" cy="50" r="2.6"/>
+      </g>
+      <g class="leaf" transform="translate(952 140) rotate(-38) scale(0.44)" style="--d:-0.4s">
+        <path class="blade" fill="#4fc3c1" fill-opacity="0.05" stroke="#4fc3c1" stroke-opacity="0.26" stroke-width="1.3" d="M0 52 C-6 56 -30 56 -40 38 C-48 22 -46 -10 -36 -32 C-26 -52 -12 -62 0 -63 C12 -62 26 -52 36 -32 C46 -10 48 22 40 38 C30 56 6 56 0 52 Z"/>
+          <path class="vein" fill="none" stroke="#4fc3c1" stroke-opacity="0.22" stroke-width="1" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-glow" fill="none" stroke="#7fe6ff" stroke-opacity="0.3" stroke-width="3.2" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-flow" fill="none" stroke="#d6faff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" pathLength="100" d="M0 68 L0 -58"/>
+          <path class="vein-flow side" fill="none" stroke="#d6faff" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round" d="M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <circle class="core" fill="#b8f4ff" fill-opacity="0.55" cx="0" cy="50" r="2.6"/>
+      </g>
+      <g class="leaf" transform="translate(906 198) rotate(18) scale(0.38)" style="--d:-1.8s">
+        <path class="blade" fill="#4fc3c1" fill-opacity="0.05" stroke="#4fc3c1" stroke-opacity="0.26" stroke-width="1.3" d="M0 52 C-6 56 -30 56 -40 38 C-48 22 -46 -10 -36 -32 C-26 -52 -12 -62 0 -63 C12 -62 26 -52 36 -32 C46 -10 48 22 40 38 C30 56 6 56 0 52 Z"/>
+          <path class="vein" fill="none" stroke="#4fc3c1" stroke-opacity="0.22" stroke-width="1" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-glow" fill="none" stroke="#7fe6ff" stroke-opacity="0.3" stroke-width="3.2" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-flow" fill="none" stroke="#d6faff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" pathLength="100" d="M0 68 L0 -58"/>
+          <path class="vein-flow side" fill="none" stroke="#d6faff" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round" d="M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <circle class="core" fill="#b8f4ff" fill-opacity="0.55" cx="0" cy="50" r="2.6"/>
+      </g>
+      <g class="leaf" transform="translate(70 520) rotate(-128) scale(0.44)" style="--d:-1.1s">
+        <path class="blade" fill="#4fc3c1" fill-opacity="0.05" stroke="#4fc3c1" stroke-opacity="0.26" stroke-width="1.3" d="M0 52 C-6 56 -30 56 -40 38 C-48 22 -46 -10 -36 -32 C-26 -52 -12 -62 0 -63 C12 -62 26 -52 36 -32 C46 -10 48 22 40 38 C30 56 6 56 0 52 Z"/>
+          <path class="vein" fill="none" stroke="#4fc3c1" stroke-opacity="0.22" stroke-width="1" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-glow" fill="none" stroke="#7fe6ff" stroke-opacity="0.3" stroke-width="3.2" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-flow" fill="none" stroke="#d6faff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" pathLength="100" d="M0 68 L0 -58"/>
+          <path class="vein-flow side" fill="none" stroke="#d6faff" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round" d="M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <circle class="core" fill="#b8f4ff" fill-opacity="0.55" cx="0" cy="50" r="2.6"/>
+      </g>
+      <g class="leaf" transform="translate(150 560) rotate(150) scale(0.36)" style="--d:-2.5s">
+        <path class="blade" fill="#4fc3c1" fill-opacity="0.05" stroke="#4fc3c1" stroke-opacity="0.26" stroke-width="1.3" d="M0 52 C-6 56 -30 56 -40 38 C-48 22 -46 -10 -36 -32 C-26 -52 -12 -62 0 -63 C12 -62 26 -52 36 -32 C46 -10 48 22 40 38 C30 56 6 56 0 52 Z"/>
+          <path class="vein" fill="none" stroke="#4fc3c1" stroke-opacity="0.22" stroke-width="1" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-glow" fill="none" stroke="#7fe6ff" stroke-opacity="0.3" stroke-width="3.2" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-flow" fill="none" stroke="#d6faff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" pathLength="100" d="M0 68 L0 -58"/>
+          <path class="vein-flow side" fill="none" stroke="#d6faff" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round" d="M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <circle class="core" fill="#b8f4ff" fill-opacity="0.55" cx="0" cy="50" r="2.6"/>
+      </g>
+      <g class="leaf" transform="translate(640 40) rotate(-150) scale(0.34)" style="--d:-0.9s">
+        <path class="blade" fill="#4fc3c1" fill-opacity="0.05" stroke="#4fc3c1" stroke-opacity="0.26" stroke-width="1.3" d="M0 52 C-6 56 -30 56 -40 38 C-48 22 -46 -10 -36 -32 C-26 -52 -12 -62 0 -63 C12 -62 26 -52 36 -32 C46 -10 48 22 40 38 C30 56 6 56 0 52 Z"/>
+          <path class="vein" fill="none" stroke="#4fc3c1" stroke-opacity="0.22" stroke-width="1" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-glow" fill="none" stroke="#7fe6ff" stroke-opacity="0.3" stroke-width="3.2" stroke-linecap="round" d="M0 68 L0 -58 M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <path class="vein-flow" fill="none" stroke="#d6faff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" pathLength="100" d="M0 68 L0 -58"/>
+          <path class="vein-flow side" fill="none" stroke="#d6faff" stroke-opacity="0.5" stroke-width="1.6" stroke-linecap="round" d="M0 40 Q-21 36 -38 16 M0 40 Q21 36 38 16 M0 24 Q-22 20 -40 2 M0 24 Q22 20 40 2 M0 8 Q-22 4 -40 -14 M0 8 Q22 4 40 -14 M0 -8 Q-20 -12 -36 -30 M0 -8 Q20 -12 36 -30 M0 -24 Q-16 -28 -30 -44 M0 -24 Q16 -28 30 -44 M0 -38 Q-11 -42 -20 -54 M0 -38 Q11 -42 20 -54 M0 50 Q-24 48 -40 26 M0 50 Q24 48 40 26"/>
+          <circle class="core" fill="#b8f4ff" fill-opacity="0.55" cx="0" cy="50" r="2.6"/>
+      </g>
+    </svg>
+    <div class="wrap">
+      <div>
+        <div class="tag"><span lang="en">Industrial automation · Electronics · AI</span><span lang="id">Otomasi industri · Elektronika · AI</span></div>
+        <h1 lang="en">Technology that <em>works for people</em> and nature</h1>
+        <h1 lang="id">Teknologi yang <em>bermanfaat</em> bagi manusia dan alam</h1>
+        <p lang="en">We are a team that loves automation, electronics and AI. We help factories run smoothly, give anyone willing to learn a chance to grow, and look after the nature around us.</p>
+        <p lang="id">Kami tim yang mencintai otomasi, elektronika, dan AI. Kami membantu pabrik berjalan lancar, memberi kesempatan tumbuh bagi siapa pun yang mau belajar, dan menjaga alam di sekitar kita.</p>
+        <div class="cta">
+          <a class="btn primary" href="#kontak"><span lang="en">Discuss a project</span><span lang="id">Diskusikan proyek</span></a>
+          <a class="btn ghost" href="#karier"><span lang="en">Join the team</span><span lang="id">Bergabung dengan tim</span></a>
+        </div>
+      </div>
+      <svg class="rung" viewBox="0 0 420 220" role="img" aria-label="PLC ladder diagram: two input contacts energise one output coil.">
+        <line class="wire" x1="20" y1="10" x2="20" y2="210"/>
+        <line class="wire" x1="400" y1="10" x2="400" y2="210"/>
+        <path class="live" d="M20 70 H90"/>
+        <path class="wire" d="M90 55 V85 M105 55 V85"/>
+        <path class="live" d="M105 70 H180"/>
+        <path class="wire" d="M180 55 V85 M195 55 V85"/>
+        <path class="live" d="M195 70 H300"/>
+        <path class="coil" d="M310 52 A18 18 0 0 0 310 88 M330 52 A18 18 0 0 1 330 88"/>
+        <path class="live" d="M342 70 H400"/>
+        <text x="78" y="45">I0.0 SENSOR</text>
+        <text x="168" y="45">I0.1 AUTO</text>
+        <text x="296" y="45">Q0.0 IT</text>
+        <path class="wire" d="M20 160 H90 M90 145 V175 M105 145 V175 M105 160 H300 M342 160 H400"/>
+        <line class="wire" x1="90" y1="175" x2="105" y2="145"/>
+        <path class="wire" d="M310 142 A18 18 0 0 0 310 178 M330 142 A18 18 0 0 1 330 178"/>
+        <text x="78" y="135">I0.2 STOP</text>
+        <text x="292" y="135">Q0.1 ALARM</text>
+      </svg>
+    </div>
+  </section>
+
+  <section class="block" id="tentang">
+    <div class="wrap">
+      <div class="head">
+        <div class="tag"><b>01</b> · <span lang="en">About us</span><span lang="id">Tentang kami</span></div>
+        <h2><span lang="en">Our background</span><span lang="id">Latar belakang</span></h2>
+      </div>
+      <div class="about">
+        <div class="text">
+          <p lang="en">Gamanlab grew out of a group of practitioners at home in electrical panels, control rooms and code editors. We have built control systems, programmed PLCs, designed HMI screens and connected machines to company information systems. <span class="sample">sample text</span></p>
+          <p lang="id">Gamanlab lahir dari sekumpulan praktisi yang terbiasa bekerja di panel listrik, ruang kontrol, dan depan layar kode. Kami pernah merakit sistem kendali, memprogram PLC, merancang tampilan HMI, hingga menghubungkan mesin ke sistem informasi perusahaan. <span class="sample">teks contoh</span></p>
+          <p lang="en">We believe technology is most useful when it is built together: working alongside similar companies, giving chances to people who want to learn, and staying mindful of our impact on the environment.</p>
+          <p lang="id">Kami percaya teknologi paling berguna ketika dikerjakan bersama: bersinergi dengan perusahaan sejenis, memberi kesempatan pada orang yang mau belajar, dan tetap memperhatikan dampaknya pada lingkungan.</p>
+        </div>
+        <ul class="values">
+          <li><b><span lang="en">Synergy</span><span lang="id">Sinergi</span></b><span><span lang="en">Working with integrators, vendors and factories rather than competing alone.</span><span lang="id">Bekerja sama dengan integrator, vendor, dan pabrik, bukan bersaing sendiri-sendiri.</span></span></li>
+          <li><b><span lang="en">Open</span><span lang="id">Terbuka</span></b><span><span lang="en">Opportunities for fresh graduates, and for people without formal education.</span><span lang="id">Kesempatan bagi lulusan baru, bahkan yang tanpa latar belakang pendidikan formal.</span></span></li>
+          <li><b><span lang="en">Committed</span><span lang="id">Sungguh-sungguh</span></b><span><span lang="en">Serious about technical work and about social work.</span><span lang="id">Serius dalam pekerjaan teknis dan dalam kegiatan sosial.</span></span></li>
+          <li><b><span lang="en">Sustainable</span><span lang="id">Lestari</span></b><span><span lang="en">Every solution weighs energy efficiency and care for nature.</span><span lang="id">Setiap solusi mempertimbangkan efisiensi energi dan keberlanjutan alam.</span></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt" id="keahlian">
+    <div class="wrap">
+      <div class="head">
+        <div class="tag"><b>02</b> · <span lang="en">Expertise</span><span lang="id">Keahlian</span></div>
+        <h2><span lang="en">What we do</span><span lang="id">Apa yang kami kerjakan</span></h2>
+        <p lang="en">From hardware to software, in one team.</p>
+        <p lang="id">Dari level perangkat keras sampai perangkat lunak, dalam satu tim.</p>
+      </div>
+      <div class="skills">
+        <div class="skill"><div class="tag">PLC</div><h3><span lang="en">PLC programming</span><span lang="id">Pemrograman PLC</span></h3><p lang="en">Ladder, structured text and function blocks for new machines and retrofits.</p><p lang="id">Ladder, structured text, dan function block untuk mesin baru maupun retrofit.</p></div>
+        <div class="skill"><div class="tag">HMI</div><h3><span lang="en">HMI design</span><span lang="id">Desain HMI</span></h3><p lang="en">Operator screens that stay clear and readable in normal running and in alarm.</p><p lang="id">Layar operator yang jelas dan mudah dibaca saat kondisi normal maupun alarm.</p></div>
+        <div class="skill"><div class="tag">SCADA</div><h3><span lang="en">SCADA systems</span><span lang="id">Sistem SCADA</span></h3><p lang="en">Remote monitoring and control, historians and production reporting.</p><p lang="id">Pemantauan dan kendali jarak jauh, historian, dan pelaporan produksi.</p></div>
+        <div class="skill"><div class="tag"><span lang="en">ELECTRONICS</span><span lang="id">ELEKTRONIKA</span></div><h3><span lang="en">Electronics &amp; panels</span><span lang="id">Elektronika &amp; panel</span></h3><p lang="en">Circuit design, PCBs and control panel assembly.</p><p lang="id">Perancangan rangkaian, PCB, dan perakitan panel kontrol.</p></div>
+        <div class="skill"><div class="tag">MCU</div><h3><span lang="en">Microcontrollers &amp; IoT</span><span lang="id">Mikrokontroler &amp; IoT</span></h3><p lang="en">ESP32, STM32 and Arduino devices for data acquisition and control.</p><p lang="id">Perangkat berbasis ESP32, STM32, atau Arduino untuk akuisisi data dan kendali.</p></div>
+        <div class="skill"><div class="tag">SOFTWARE · AI</div><h3><span lang="en">Software &amp; AI</span><span lang="id">Pemrograman &amp; AI</span></h3><p lang="en">Web apps, dashboards and AI models for predictive maintenance and visual inspection.</p><p lang="id">Aplikasi web, dasbor, dan model AI untuk prediksi perawatan serta inspeksi visual.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="produk">
+    <div class="wrap">
+      <div class="head">
+        <div class="tag"><b>03</b> · <span lang="en">Products &amp; solutions</span><span lang="id">Produk &amp; solusi</span></div>
+        <h2><span lang="en">Our products</span><span lang="id">Produk kami</span></h2>
+        <p lang="en">Ready-to-use software built from our field experience, each backed by our after-sales support.</p>
+        <p lang="id">Perangkat lunak siap pakai yang lahir dari pengalaman lapangan, masing-masing didukung layanan purnajual kami.</p>
+      </div>
+      <div class="products">
+        <article class="product featured"><div class="shot"><span lang="en">Product photo</span><span lang="id">Foto produk</span></div><div class="body"><div class="tag">Data Interfacing System</div><h3>Hawa CEMS Online</h3><div class="proof"><strong>100+</strong><span><span lang="en">companies already use it</span><span lang="id">perusahaan sudah menggunakan</span></span></div><p lang="en">Collects data from CEMS analyzers and sends it reliably to the government's online emission reporting system, keeping plants compliant.</p><p lang="id">Mengambil data dari analyzer CEMS dan mengirimkannya secara andal ke sistem pelaporan emisi online pemerintah, sehingga pabrik tetap patuh regulasi.</p><ul><li>CEMS</li><li>SISPEK</li><li>Store &amp; Forward</li></ul></div></article>
+        <article class="product"><div class="shot"><span lang="en">Product photo</span><span lang="id">Foto produk</span></div><div class="body"><div class="tag">Platform</div><h3>Hawa Industrial Platform</h3><p lang="en">One platform to connect, visualise and record plant data: from field protocols to dashboards, alarms and reports.</p><p lang="id">Satu platform untuk menghubungkan, menampilkan, dan merekam data pabrik: dari protokol lapangan sampai dasbor, alarm, dan laporan.</p><ul><li>HMI &amp; Dashboard</li><li>Alarm &amp; Trend</li><li>Report</li><li>Data &amp; Protocols</li></ul></div></article>
+        <article class="product"><div class="shot"><span lang="en">Product photo</span><span lang="id">Foto produk</span></div><div class="body"><div class="tag">OEE</div><h3>OEE</h3><p lang="en">Measures Overall Equipment Effectiveness from availability, performance and quality, so losses on each machine are visible.</p><p lang="id">Mengukur Overall Equipment Effectiveness dari availability, performance, dan quality, sehingga kerugian di tiap mesin terlihat jelas.</p><ul><li>Availability</li><li>Performance</li><li>Quality</li><li>Downtime</li></ul></div></article>
+      </div>
+      <div class="head sub">
+        <h2><span lang="en">Solutions we deliver</span><span lang="id">Solusi yang kami kerjakan</span></h2>
+        <p lang="en">Systems we design, build and commission for our clients, tailored to each site.</p>
+        <p lang="id">Sistem yang kami rancang, bangun, dan komisioning untuk klien, disesuaikan dengan kebutuhan tiap lokasi.</p>
+      </div>
+      <div class="solutions">
+        <article class="solution"><div class="tag"><span lang="en">Environment</span><span lang="id">Lingkungan</span></div><h3><span lang="en">Environmental monitoring</span><span lang="id">Pemantauan lingkungan</span></h3><p lang="en">Continuous monitoring of stack emissions, wastewater, air, noise, groundwater, energy use and hazardous waste, plus weather and flood early warning, to help plants meet environmental regulations.</p><p lang="id">Pemantauan emisi cerobong, air limbah, udara, kebisingan, air tanah, energi, dan limbah B3 secara terus-menerus, serta stasiun cuaca dan peringatan dini banjir, untuk membantu pabrik memenuhi regulasi lingkungan.</p><ul><li>CEMS &amp; SPARING</li><li><span lang="en">Air &amp; Water Quality</span><span lang="id">Kualitas Udara &amp; Air</span></li><li><span lang="en">Hazardous Waste</span><span lang="id">Limbah B3</span></li><li><span lang="en">Energy &amp; GHG</span><span lang="id">Energi &amp; GRK</span></li><li><span lang="en">Early Warning</span><span lang="id">Peringatan Dini</span></li></ul></article>
+        <article class="solution"><div class="tag">Utility · Safety</div><h3><span lang="en">Utility &amp; safety systems</span><span lang="id">Sistem utilitas &amp; keselamatan</span></h3><p lang="en">Monitoring and control for the systems that keep a plant running and safe: fire and gas detection, power distribution, compressors, boilers, water and wastewater treatment plants, and balance of plant.</p><p lang="id">Pemantauan dan kendali untuk sistem yang menjaga pabrik tetap berjalan dan aman: deteksi kebakaran dan gas, distribusi listrik, kompresor, boiler, instalasi pengolahan air dan air limbah, serta balance of plant.</p><ul><li>Fire &amp; Gas</li><li>Power Monitoring</li><li><span lang="en">Compressor &amp; Boiler</span><span lang="id">Kompresor &amp; Boiler</span></li><li>WTP &amp; WWTP</li><li>BOP</li></ul></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt" id="ot-it">
+    <div class="wrap">
+      <div class="head">
+        <div class="tag"><b>04</b> · <span lang="en">Bridging OT and IT</span><span lang="id">Menjembatani OT dan IT</span></div>
+        <h2><span lang="en">One data flow, from machine to decision</span><span lang="id">Satu alur data, dari mesin ke keputusan</span></h2>
+        <p lang="en">We work across every level of the ISA-95 architecture, especially where the operational and information worlds meet.</p>
+        <p lang="id">Kami bekerja di semua level arsitektur ISA-95, terutama di titik pertemuan antara dunia operasional dan dunia informasi.</p>
+      </div>
+      <div class="isa">
+        <div class="lvl"><span class="n">LEVEL 4</span><div><h3><span lang="en">ERP &amp; business</span><span lang="id">ERP &amp; bisnis</span></h3><p lang="en">Planning, finance and supply chain.</p><p lang="id">Perencanaan, keuangan, dan rantai pasok.</p></div></div>
+        <div class="lvl"><span class="n">LEVEL 3</span><div><h3><span lang="en">MES &amp; production data</span><span lang="id">MES &amp; data produksi</span></h3><p lang="en">Production tracking, OEE and quality reports.</p><p lang="id">Pelacakan produksi, OEE, dan laporan kualitas.</p></div></div>
+        <div class="lvl bridge"><span class="n">OT ⇄ IT</span><div><h3><span lang="en">The Gamanlab bridge</span><span lang="id">Jembatan Gamanlab</span></h3><p lang="en">OPC UA and MQTT gateways, database integration, APIs and industrial network security.</p><p lang="id">Gateway OPC UA dan MQTT, integrasi database, API, dan keamanan jaringan industri.</p></div></div>
+        <div class="lvl"><span class="n">LEVEL 2</span><div><h3>SCADA &amp; HMI</h3><p lang="en">Process supervision and control.</p><p lang="id">Pengawasan dan kendali proses.</p></div></div>
+        <div class="lvl"><span class="n">LEVEL 1</span><div><h3><span lang="en">PLCs &amp; controllers</span><span lang="id">PLC &amp; kontroler</span></h3><p lang="en">Machine and process control logic.</p><p lang="id">Logika kendali mesin dan proses.</p></div></div>
+        <div class="lvl"><span class="n">LEVEL 0</span><div><h3><span lang="en">Sensors &amp; actuators</span><span lang="id">Sensor &amp; aktuator</span></h3><p lang="en">Field devices and electronics.</p><p lang="id">Perangkat lapangan dan elektronika.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="dukungan">
+    <div class="wrap">
+      <div class="head">
+        <div class="tag"><b>05</b> · <span lang="en">After-sales support</span><span lang="id">Layanan purnajual</span></div>
+        <h2><span lang="en">We don't leave after handover</span><span lang="id">Kami tidak pergi setelah serah terima</span></h2>
+        <p lang="en">We keep caring for every system we install. We stay with our users from commissioning through years of operation, so your machines and data keep running.</p>
+        <p lang="id">Setiap sistem yang kami pasang tetap kami rawat. Kami mendampingi pengguna sejak komisioning sampai bertahun-tahun pemakaian, supaya mesin dan data Anda terus berjalan.</p>
+      </div>
+      <div class="support">
+        <ol class="cycle">
+          <li><div class="tag"><span lang="en">Commissioning</span><span lang="id">Komisioning</span></div><h3><span lang="en">On-site testing</span><span lang="id">Uji coba di lokasi</span></h3><p lang="en">Systems are tested with your operators until they run stably under real production conditions.</p><p lang="id">Sistem diuji bersama operator sampai berjalan stabil di kondisi produksi nyata.</p></li>
+          <li><div class="tag"><span lang="en">Training</span><span lang="id">Pelatihan</span></div><h3><span lang="en">Operator &amp; technician training</span><span lang="id">Pelatihan operator &amp; teknisi</span></h3><p lang="en">Your team learns to operate the system, read alarms and handle minor faults.</p><p lang="id">Tim Anda paham cara mengoperasikan, membaca alarm, dan menangani gangguan ringan.</p></li>
+          <li><div class="tag"><span lang="en">Documentation</span><span lang="id">Dokumentasi</span></div><h3><span lang="en">Documents &amp; program backups</span><span lang="id">Dokumen &amp; backup program</span></h3><p lang="en">Wiring diagrams and manuals are handed over, and PLC/HMI programs are backed up under clear version control. Source code handover follows the project agreement.</p><p lang="id">Wiring diagram dan manual diserahkan, dan program PLC/HMI dicadangkan dengan versi yang jelas. Penyerahan source code mengikuti perjanjian proyek.</p></li>
+          <li><div class="tag">Remote support</div><h3><span lang="en">Remote assistance</span><span lang="id">Bantuan jarak jauh</span></h3><p lang="en">Fast diagnosis over secure remote access, without waiting for a technician to arrive.</p><p lang="id">Diagnosa cepat lewat akses jarak jauh yang aman, tanpa harus menunggu teknisi datang.</p></li>
+          <li><div class="tag">Preventive</div><h3><span lang="en">Scheduled maintenance</span><span lang="id">Perawatan berkala</span></h3><p lang="en">Regular visits for panel checks, sensor calibration and software updates.</p><p lang="id">Kunjungan rutin untuk pengecekan panel, kalibrasi sensor, dan pembaruan perangkat lunak.</p></li>
+          <li><div class="tag">Upgrade</div><h3><span lang="en">Spare parts &amp; upgrades</span><span lang="id">Suku cadang &amp; peningkatan</span></h3><p lang="en">Replacing obsolete components and adding features as production needs change.</p><p lang="id">Penggantian komponen usang dan pengembangan fitur saat kebutuhan produksi berubah.</p></li>
+        </ol>
+        <div class="sla">
+          <div class="tag" style="color:#9fb0bf"><span lang="en">Response targets</span><span lang="id">Target respons</span> <span class="sample" style="color:var(--glow);border-color:var(--glow)"><span lang="en">sample</span><span lang="id">contoh</span></span></div>
+          <h3><span lang="en">When something goes wrong</span><span lang="id">Saat ada gangguan</span></h3>
+          <table>
+            <thead><tr><th><span lang="en">Priority</span><span lang="id">Prioritas</span></th><th><span lang="en">Response</span><span lang="id">Respons</span></th></tr></thead>
+            <tbody>
+              <tr><td><span class="pill" style="background:#e5484d"></span><span lang="en">Critical, production stopped</span><span lang="id">Kritis, produksi berhenti</span></td><td><span lang="en">&lt; 1 hour</span><span lang="id">&lt; 1 jam</span></td></tr>
+              <tr><td><span class="pill" style="background:#f5a524"></span><span lang="en">High, performance degraded</span><span lang="id">Tinggi, kinerja menurun</span></td><td><span lang="en">&lt; 4 hours</span><span lang="id">&lt; 4 jam</span></td></tr>
+              <tr><td><span class="pill" style="background:#3d93e8"></span><span lang="en">Normal, change request</span><span lang="id">Normal, permintaan perubahan</span></td><td><span lang="en">1 business day</span><span lang="id">1 hari kerja</span></td></tr>
+            </tbody>
+          </table>
+          <p lang="en">24/7 emergency service for critical systems is available under a maintenance contract.</p>
+          <p lang="id">Layanan darurat 24/7 untuk sistem kritis tersedia melalui kontrak perawatan.</p>
+        </div>
+      </div>
+      <div class="promise">
+        <span><span lang="en">System warranty</span><span lang="id">Garansi sistem</span></span>
+        <span><span lang="en">Program backups kept safe</span><span lang="id">Backup program terjaga</span></span>
+        <span><span lang="en">Fast response</span><span lang="id">Respons cepat</span></span>
+        <span><span lang="en">Long-term support</span><span lang="id">Dukungan jangka panjang</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt" id="kolaborasi">
+    <div class="wrap">
+      <div class="head">
+        <div class="tag"><b>06</b> · <span lang="en">Collaboration</span><span lang="id">Kolaborasi</span></div>
+        <h2><span lang="en">Partners, not competitors</span><span lang="id">Kawan, bukan lawan</span></h2>
+        <p lang="en">We see companies in our field as colleagues, not rivals. Instead of competing for the same work, we share projects, knowledge and resources, so clients get the best team and the whole industry grows together.</p>
+        <p lang="id">Kami memandang perusahaan sejenis sebagai rekan, bukan pesaing. Daripada saling berebut pekerjaan, kami berbagi proyek, ilmu, dan sumber daya, sehingga klien mendapat tim terbaik dan industri tumbuh bersama.</p>
+      </div>
+      <div class="partners">
+        <article class="partner-hero">
+          <img src="partner-grc.png" alt="GRC logo" width="191" height="65">
+          <div class="ph-text">
+            <div class="tag"><span lang="en">Strategic partner</span><span lang="id">Mitra utama</span></div>
+            <h3>PT. Genta Raya Cemerlang</h3>
+            <p lang="en">Our closest partner. Together with GRC we have built a network of dozens of partner companies: integrators, suppliers and technical specialists who share projects and support one another across Indonesia.</p>
+            <p lang="id">Mitra terdekat kami. Bersama GRC, kami telah membangun jaringan puluhan perusahaan mitra: integrator, pemasok, dan spesialis teknis yang saling berbagi proyek dan saling mendukung di berbagai daerah di Indonesia.</p>
+            <a class="plink" href="https://grcteknik.com" target="_blank" rel="noopener">grcteknik.com ↗</a>
+          </div>
+        </article>
+        <article class="partner-card">
+          <img src="partner-wkm.png" alt="WKM logo" width="211" height="200">
+          <h3>PT. Wraksa Kencana Mukti</h3>
+          <a class="plink" href="https://public.thewkm.com/" target="_blank" rel="noopener">thewkm.com ↗</a>
+        </article>
+        <article class="partner-card">
+          <img src="partner-tss.png" alt="TSS logo" width="238" height="110">
+          <h3>TSS Automation</h3>
+        </article>
+        <article class="partner-card more">
+          <strong><span lang="en">Dozens</span><span lang="id">Puluhan</span></strong>
+          <p lang="en">more partners in our network</p>
+          <p lang="id">mitra lain dalam jaringan kami</p>
+        </article>
+      </div>
+      <div class="collab-modes">
+        <div><h3><span lang="en">Project partnerships</span><span lang="id">Kemitraan proyek</span></h3><p lang="en">Sharing work with other integrators according to each team's strengths.</p><p lang="id">Berbagi pekerjaan dengan integrator lain sesuai keahlian masing-masing.</p></div>
+        <div><h3><span lang="en">Technical backup</span><span lang="id">Dukungan teknis</span></h3><p lang="en">Acting as a support team for programming, commissioning or maintenance.</p><p lang="id">Menjadi tim pendukung untuk pemrograman, komisioning, atau perawatan.</p></div>
+        <div><h3><span lang="en">Joint research</span><span lang="id">Riset bersama</span></h3><p lang="en">Developing new products and solutions with universities and industry.</p><p lang="id">Mengembangkan produk dan solusi baru bersama kampus dan industri.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="karier">
+    <div class="wrap">
+      <div class="head">
+        <div class="tag"><b>07</b> · <span lang="en">Careers &amp; talent development</span><span lang="id">Karier &amp; pengembangan SDM</span></div>
+        <h2><span lang="en">No diploma required</span><span lang="id">Ijazah bukan syarat utama</span></h2>
+        <p lang="en">We open doors for fresh graduates, and for people without formal education who are willing to learn.</p>
+        <p lang="id">Kami membuka kesempatan bagi lulusan baru, dan juga bagi mereka yang tidak punya pendidikan formal tetapi punya kemauan belajar.</p>
+      </div>
+      <div class="career">
+        <ol class="path">
+          <li><div><h3><span lang="en">Apply &amp; meet us</span><span lang="id">Daftar &amp; kenalan</span></h3><p lang="en">Tell us what interests you. No industry experience needed.</p><p lang="id">Ceritakan minat Anda. Tidak perlu pengalaman industri.</p></div></li>
+          <li><div><h3><span lang="en">Learn the basics</span><span lang="id">Belajar dasar</span></h3><p lang="en">Electrical, electronics and programming logic with a mentor.</p><p lang="id">Listrik, elektronika, dan logika pemrograman bersama mentor.</p></div></li>
+          <li><div><h3><span lang="en">Practise on real projects</span><span lang="id">Praktik di proyek nyata</span></h3><p lang="en">Join the field team, starting with simple tasks.</p><p lang="id">Ikut tim di lapangan, mulai dari tugas sederhana.</p></div></li>
+          <li><div><h3><span lang="en">Grow into a specialist</span><span lang="id">Tumbuh menjadi spesialis</span></h3><p lang="en">Choose a track: PLC, SCADA, electronics, or software and AI.</p><p lang="id">Pilih jalur PLC, SCADA, elektronika, atau software dan AI.</p></div></li>
+        </ol>
+        <div class="quote">
+          <div class="tag" style="color:#9aa8b3"><span lang="en">Team story</span><span lang="id">Cerita anggota tim</span> <span class="sample"><span lang="en">sample</span><span lang="id">contoh</span></span></div>
+          <blockquote lang="en">"I joined without an engineering degree. Two years later I was programming PLCs for a production line."</blockquote>
+          <blockquote lang="id">"Saya masuk tanpa ijazah teknik. Dua tahun kemudian saya memprogram PLC untuk lini produksi."</blockquote>
+          <p><span lang="en">Team member name · Automation technician</span><span lang="id">Nama anggota · Teknisi otomasi</span></p>
+          <a class="btn primary" href="#kontak" style="justify-self:start"><span lang="en">Send your application</span><span lang="id">Kirim lamaran</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt green" id="lestari">
+    <div class="wrap">
+      <div class="head">
+        <div class="tag"><b>08</b> · <span lang="en">Social &amp; environment</span><span lang="id">Sosial &amp; lingkungan</span></div>
+        <h2><span lang="en">Keep nature in balance</span><span lang="id">Jaga keseimbangan alam</span></h2>
+        <p lang="en">We believe nature was designed with the best mechanisms for sustaining itself, so we must never act carelessly toward it.</p>
+        <p lang="id">Kami percaya bahwa alam sudah dirancang memiliki mekanisme terbaik dalam hal keberlangsungan, oleh karena itu kita tidak boleh bertindak semena-mena.</p>
+      </div>
+      <div class="eco">
+        <article><div class="tag"><span lang="en">Social</span><span lang="id">Sosial</span></div><h3><span lang="en">Free training</span><span lang="id">Pelatihan gratis</span></h3><p lang="en">Basic electronics and programming classes for young people and the local community.</p><p lang="id">Kelas dasar elektronika dan pemrograman untuk pemuda dan masyarakat sekitar.</p></article>
+        <article><div class="tag"><span lang="en">Social</span><span lang="id">Sosial</span></div><h3><span lang="en">Technology for communities</span><span lang="id">Teknologi untuk komunitas</span></h3><p lang="en">Helping schools, pesantren and small businesses with simple technology solutions.</p><p lang="id">Membantu sekolah, pesantren, dan UMKM dengan solusi teknologi sederhana.</p></article>
+        <article><div class="tag"><span lang="en">Environment</span><span lang="id">Lingkungan</span></div><h3><span lang="en">Energy efficiency</span><span lang="id">Efisiensi energi</span></h3><p lang="en">Control systems designed to save electricity and reduce production waste.</p><p lang="id">Merancang sistem kendali yang menghemat listrik dan mengurangi limbah produksi.</p></article>
+        <article><div class="tag"><span lang="en">Environment</span><span lang="id">Lingkungan</span></div><h3><span lang="en">Green action</span><span lang="id">Aksi hijau</span></h3><p lang="en">Tree planting and sensor-based environmental monitoring.</p><p lang="id">Penanaman pohon dan pemantauan lingkungan berbasis sensor.</p></article>
+      </div>
+      <div class="metric">
+        <div><strong>000</strong><span><span lang="en">training participants</span><span lang="id">peserta pelatihan</span></span></div>
+        <div><strong>000</strong><span><span lang="en">trees planted</span><span lang="id">pohon ditanam</span></span></div>
+        <div><strong>00%</strong><span><span lang="en">energy saved for clients</span><span lang="id">energi dihemat klien</span></span></div>
+        <div><span class="sample" style="align-self:center"><span lang="en">figures to come</span><span lang="id">angka menyusul</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="kontak">
+    <div class="wrap">
+      <div class="head">
+        <div class="tag"><b>09</b> · <span lang="en">Contact</span><span lang="id">Kontak</span></div>
+        <h2><span lang="en">Let's work together</span><span lang="id">Mari bekerja sama</span></h2>
+      </div>
+      <div class="contact">
+        <dl>
+          <div><dt><span lang="en">Address</span><span lang="id">Alamat</span></dt><dd>Purworejo, <span lang="en">Central Java, Indonesia</span><span lang="id">Jawa Tengah, Indonesia</span></dd></div>
+          <div><dt>Email</dt><dd>info@gamanlab.id</dd></div>
+        </dl>
+        <form id="contact-form" action="https://api.gamanlab.id/" method="post">
+          <label for="f-name"><span><span lang="en">Name</span><span lang="id">Nama</span></span><input id="f-name" name="name" required maxlength="100" autocomplete="name"></label>
+          <label for="f-email"><span>Email</span><input id="f-email" name="email" type="email" required maxlength="150" autocomplete="email"></label>
+          <input class="hp" type="text" name="website" id="f-website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <label for="f-topic"><span><span lang="en">Subject</span><span lang="id">Keperluan</span></span>
+            <select id="f-topic" name="topic">
+              <option data-en="Automation project" data-id="Proyek otomasi">Automation project</option>
+              <option data-en="Product inquiry" data-id="Informasi produk">Product inquiry</option>
+              <option data-en="Technical support / maintenance" data-id="Dukungan teknis / perawatan">Technical support / maintenance</option>
+              <option data-en="Partnership" data-id="Kerja sama / kemitraan">Partnership</option>
+              <option data-en="Job / internship application" data-id="Lamaran kerja / magang">Job / internship application</option>
+              <option data-en="Community activities" data-id="Kegiatan sosial">Community activities</option>
+            </select>
+          </label>
+          <label for="f-msg"><span><span lang="en">Message</span><span lang="id">Pesan</span></span><textarea id="f-msg" name="message" required maxlength="5000"></textarea></label>
+          <button type="submit" id="f-submit"><span lang="en">Send message</span><span lang="id">Kirim pesan</span></button>
+          <p class="form-msg" id="msg-sending" hidden><span lang="en">Sending…</span><span lang="id">Mengirim…</span></p>
+          <p class="form-msg" id="msg-ok" hidden><span lang="en">Thank you, your message has been sent. We will reply to your email soon.</span><span lang="id">Terima kasih, pesan Anda sudah terkirim. Kami akan segera membalas ke email Anda.</span></p>
+          <p class="form-msg err" id="msg-err" hidden><span lang="en">The message could not be sent. Please try again, or email us directly at info@gamanlab.id.</span><span lang="id">Pesan gagal dikirim. Silakan coba lagi, atau kirim email langsung ke info@gamanlab.id.</span></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span style="display:flex;align-items:center;gap:.6rem"><img src="logo.png" alt="" width="20" height="26">© 2026 Gamanlab</span>
+    <span class="tag" style="color:#9aa8b3"><span lang="en">OT · IT · People · Planet</span><span lang="id">OT · IT · SDM · Lestari</span></span>
+  </div>
+</footer>
+
+<script>
+  const btn = document.getElementById('menu-btn');
+  const menu = document.getElementById('menu');
+  const mq = window.matchMedia('(max-width: 72rem)');
+  function sync() { menu.hidden = mq.matches && btn.getAttribute('aria-expanded') !== 'true'; }
+  btn.addEventListener('click', () => { btn.setAttribute('aria-expanded', String(btn.getAttribute('aria-expanded') !== 'true')); sync(); });
+  menu.addEventListener('click', e => { if (e.target.closest('a') && mq.matches) { btn.setAttribute('aria-expanded', 'false'); sync(); } });
+  mq.addEventListener('change', sync); sync();
+  const form = document.getElementById('contact-form');
+  const show = id => ['msg-sending', 'msg-ok', 'msg-err'].forEach(m => { document.getElementById(m).hidden = m !== id; });
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const submit = document.getElementById('f-submit');
+    submit.disabled = true; show('msg-sending');
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) { show('msg-ok'); form.reset(); } else { show('msg-err'); }
+    } catch (err) { show('msg-err'); }
+    submit.disabled = false;
+  });
+
+  // Bahasa: default English, pilihan disimpan di browser pengunjung
+  function setLang(lang) {
+    const root = document.documentElement;
+    root.dataset.lang = lang;
+    root.lang = lang;
+    document.querySelectorAll('.lang-switch button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+    document.querySelectorAll('option[data-en]').forEach(o => { o.textContent = o.dataset[lang]; });
+    try { localStorage.setItem('gamanlab-lang', lang); } catch (e) {}
+  }
+  document.querySelectorAll('.lang-switch button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+  let saved = null;
+  try { saved = localStorage.getItem('gamanlab-lang'); } catch (e) {}
+  setLang(saved === 'id' ? 'id' : 'en');
+</script>
+
+</body>
+</html>
