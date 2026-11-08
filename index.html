@@ -61,7 +61,6 @@ p { margin: 0; max-width: 62ch; }
 @media (min-width: 40rem) { .wrap { padding-inline: 2rem; } }
 .tag { font-family: var(--f-mono); font-size: var(--s-1); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
 .tag b { color: var(--accent); font-weight: 500; }
-.sample { display: inline-block; font-family: var(--f-mono); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; padding: .1rem .4rem; border: 1px dashed var(--accent); color: var(--accent); border-radius: 3px; vertical-align: middle; }
 
 /* Header */
 header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--ink-strong); color: var(--on-ink); border-bottom: 3px solid var(--brand-teal); }
@@ -150,22 +149,17 @@ section.block { padding-block: 4.5rem; border-bottom: 1px solid var(--line); scr
 .partner-card.more { border-style: dashed; background: transparent; }
 .partner-card.more strong { font-family: var(--f-display); font-size: var(--s3); text-transform: uppercase; color: var(--accent); line-height: 1; }
 .partner-card.more p { color: var(--muted); }
-.logo-slot { aspect-ratio: 3 / 2; max-width: 100%; border: 1px dashed var(--line); border-radius: 4px; display: grid; place-items: center; color: var(--muted); font-family: var(--f-mono); font-size: .8rem; background: var(--surface); }
 .collab-modes { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); margin-top: 2.5rem; }
 .collab-modes div { display: grid; gap: .4rem; border-top: 2px solid var(--fg); padding-top: 1rem; }
 .collab-modes p { color: var(--muted); }
 
 /* Karier */
 .career { display: grid; gap: 2.5rem; grid-template-columns: 1fr; }
-@media (min-width: 52rem) { .career { grid-template-columns: 1fr 1fr; } }
 .path { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; counter-reset: step; }
 .path li { counter-increment: step; display: grid; grid-template-columns: 3rem 1fr; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
 .path li::before { content: counter(step, decimal-leading-zero); font-family: var(--f-mono); color: var(--accent); font-size: .9rem; padding-top: .2rem; }
 .path h3 { font-size: 1.15rem; }
 .path p { color: var(--muted); font-size: .95rem; }
-.quote { background: var(--ink-strong); color: var(--on-ink); padding: 2rem; border-radius: 4px; display: grid; gap: 1rem; align-content: start; }
-.quote blockquote { margin: 0; font-family: var(--f-display); font-size: var(--s2); line-height: 1.15; }
-.quote p { color: #c3ccd3; }
 
 /* Sosial & Lingkungan */
 .green .tag b { color: var(--ok); }
@@ -173,10 +167,6 @@ section.block { padding-block: 4.5rem; border-bottom: 1px solid var(--line); scr
 .eco article { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 1.5rem; display: grid; gap: .6rem; align-content: start; }
 .eco .tag { color: var(--ok); }
 .eco p { color: var(--muted); font-size: .98rem; }
-.metric { display: flex; flex-wrap: wrap; gap: 2rem; margin-top: 2rem; padding: 1.25rem 1.5rem; background: var(--ok-soft); border-radius: 4px; }
-.metric div { display: grid; }
-.metric strong { font-family: var(--f-display); font-size: var(--s2); font-variant-numeric: tabular-nums; color: var(--ok); }
-.metric span { font-size: .9rem; color: var(--muted); }
 
 /* Dukungan */
 .support { display: grid; gap: 2.5rem; grid-template-columns: 1fr; }
@@ -233,8 +223,7 @@ html[data-lang="id"] body [lang="en"] { display: none; }
 
 /* Produk */
 .products { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
-.product { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; display: grid; grid-template-rows: auto 1fr; overflow: hidden; min-width: 0; }
-.product .shot { aspect-ratio: 16 / 9; max-width: 100%; background: var(--panel); display: grid; place-items: center; color: var(--muted); font-family: var(--f-mono); font-size: .75rem; letter-spacing: .06em; border-bottom: 1px solid var(--line); }
+.product { background: var(--surface); border: 1px solid var(--line); border-radius: 4px; display: grid; overflow: hidden; min-width: 0; }
 .product .body { padding: 1.25rem 1.5rem 1.5rem; display: grid; gap: .6rem; align-content: start; }
 .product .tag { color: var(--accent); }
 .product.featured { border: 2px solid var(--accent); }
@@ -437,8 +426,8 @@ html[data-lang="id"] body [lang="en"] { display: none; }
       </div>
       <div class="about">
         <div class="text">
-          <p lang="en">Gamanlab grew out of a group of practitioners at home in electrical panels, control rooms and code editors. We have built control systems, programmed PLCs, designed HMI screens and connected machines to company information systems. <span class="sample">sample text</span></p>
-          <p lang="id">Gamanlab lahir dari sekumpulan praktisi yang terbiasa bekerja di panel listrik, ruang kontrol, dan depan layar kode. Kami pernah merakit sistem kendali, memprogram PLC, merancang tampilan HMI, hingga menghubungkan mesin ke sistem informasi perusahaan. <span class="sample">teks contoh</span></p>
+          <p lang="en">Gamanlab grew out of a group of practitioners at home in electrical panels, control rooms and code editors. We have built control systems, programmed PLCs, designed HMI screens and connected machines to company information systems.</p>
+          <p lang="id">Gamanlab lahir dari sekumpulan praktisi yang terbiasa bekerja di panel listrik, ruang kontrol, dan depan layar kode. Kami pernah merakit sistem kendali, memprogram PLC, merancang tampilan HMI, hingga menghubungkan mesin ke sistem informasi perusahaan.</p>
           <p lang="en">We believe technology is most useful when it is built together: working alongside similar companies, giving chances to people who want to learn, and staying mindful of our impact on the environment.</p>
           <p lang="id">Kami percaya teknologi paling berguna ketika dikerjakan bersama: bersinergi dengan perusahaan sejenis, memberi kesempatan pada orang yang mau belajar, dan tetap memperhatikan dampaknya pada lingkungan.</p>
         </div>
@@ -480,9 +469,9 @@ html[data-lang="id"] body [lang="en"] { display: none; }
         <p lang="id">Perangkat lunak siap pakai yang lahir dari pengalaman lapangan, masing-masing didukung layanan purnajual kami.</p>
       </div>
       <div class="products">
-        <article class="product featured"><div class="shot"><span lang="en">Product photo</span><span lang="id">Foto produk</span></div><div class="body"><div class="tag">Data Interfacing System</div><h3>Hawa CEMS Online</h3><div class="proof"><strong>100+</strong><span><span lang="en">companies already use it</span><span lang="id">perusahaan sudah menggunakan</span></span></div><p lang="en">Collects data from CEMS analyzers and sends it reliably to the government's online emission reporting system, keeping plants compliant.</p><p lang="id">Mengambil data dari analyzer CEMS dan mengirimkannya secara andal ke sistem pelaporan emisi online pemerintah, sehingga pabrik tetap patuh regulasi.</p><ul><li>CEMS</li><li>SISPEK</li><li>Store &amp; Forward</li></ul></div></article>
-        <article class="product"><div class="shot"><span lang="en">Product photo</span><span lang="id">Foto produk</span></div><div class="body"><div class="tag">Platform</div><h3>Hawa Industrial Platform</h3><p lang="en">One platform to connect, visualise and record plant data: from field protocols to dashboards, alarms and reports.</p><p lang="id">Satu platform untuk menghubungkan, menampilkan, dan merekam data pabrik: dari protokol lapangan sampai dasbor, alarm, dan laporan.</p><ul><li>HMI &amp; Dashboard</li><li>Alarm &amp; Trend</li><li>Report</li><li>Data &amp; Protocols</li></ul></div></article>
-        <article class="product"><div class="shot"><span lang="en">Product photo</span><span lang="id">Foto produk</span></div><div class="body"><div class="tag">OEE</div><h3>OEE</h3><p lang="en">Measures Overall Equipment Effectiveness from availability, performance and quality, so losses on each machine are visible.</p><p lang="id">Mengukur Overall Equipment Effectiveness dari availability, performance, dan quality, sehingga kerugian di tiap mesin terlihat jelas.</p><ul><li>Availability</li><li>Performance</li><li>Quality</li><li>Downtime</li></ul></div></article>
+        <article class="product featured"><div class="body"><div class="tag">Data Interfacing System</div><h3>Hawa CEMS Online</h3><div class="proof"><strong>100+</strong><span><span lang="en">companies already use it</span><span lang="id">perusahaan sudah menggunakan</span></span></div><p lang="en">Collects data from CEMS analyzers and sends it reliably to the government's online emission reporting system, keeping plants compliant.</p><p lang="id">Mengambil data dari analyzer CEMS dan mengirimkannya secara andal ke sistem pelaporan emisi online pemerintah, sehingga pabrik tetap patuh regulasi.</p><ul><li>CEMS</li><li>SISPEK</li><li>Store &amp; Forward</li></ul></div></article>
+        <article class="product"><div class="body"><div class="tag">Platform</div><h3>Hawa Industrial Platform</h3><p lang="en">One platform to connect, visualise and record plant data: from field protocols to dashboards, alarms and reports.</p><p lang="id">Satu platform untuk menghubungkan, menampilkan, dan merekam data pabrik: dari protokol lapangan sampai dasbor, alarm, dan laporan.</p><ul><li>HMI &amp; Dashboard</li><li>Alarm &amp; Trend</li><li>Report</li><li>Data &amp; Protocols</li></ul></div></article>
+        <article class="product"><div class="body"><div class="tag">OEE</div><h3>OEE</h3><p lang="en">Measures Overall Equipment Effectiveness from availability, performance and quality, so losses on each machine are visible.</p><p lang="id">Mengukur Overall Equipment Effectiveness dari availability, performance, dan quality, sehingga kerugian di tiap mesin terlihat jelas.</p><ul><li>Availability</li><li>Performance</li><li>Quality</li><li>Downtime</li></ul></div></article>
       </div>
       <div class="head sub">
         <h2><span lang="en">Solutions we deliver</span><span lang="id">Solusi yang kami kerjakan</span></h2>
@@ -533,7 +522,7 @@ html[data-lang="id"] body [lang="en"] { display: none; }
           <li><div class="tag">Upgrade</div><h3><span lang="en">Spare parts &amp; upgrades</span><span lang="id">Suku cadang &amp; peningkatan</span></h3><p lang="en">Replacing obsolete components and adding features as production needs change.</p><p lang="id">Penggantian komponen usang dan pengembangan fitur saat kebutuhan produksi berubah.</p></li>
         </ol>
         <div class="sla">
-          <div class="tag" style="color:#9fb0bf"><span lang="en">Response targets</span><span lang="id">Target respons</span> <span class="sample" style="color:var(--glow);border-color:var(--glow)"><span lang="en">sample</span><span lang="id">contoh</span></span></div>
+          <div class="tag" style="color:#9fb0bf"><span lang="en">Response targets</span><span lang="id">Target respons</span></div>
           <h3><span lang="en">When something goes wrong</span><span lang="id">Saat ada gangguan</span></h3>
           <table>
             <thead><tr><th><span lang="en">Priority</span><span lang="id">Prioritas</span></th><th><span lang="en">Response</span><span lang="id">Respons</span></th></tr></thead>
@@ -613,12 +602,6 @@ html[data-lang="id"] body [lang="en"] { display: none; }
           <li><div><h3><span lang="en">Practise on real projects</span><span lang="id">Praktik di proyek nyata</span></h3><p lang="en">Join the field team, starting with simple tasks.</p><p lang="id">Ikut tim di lapangan, mulai dari tugas sederhana.</p></div></li>
           <li><div><h3><span lang="en">Grow into a specialist</span><span lang="id">Tumbuh menjadi spesialis</span></h3><p lang="en">Choose a track: PLC, SCADA, electronics, or software and AI.</p><p lang="id">Pilih jalur PLC, SCADA, elektronika, atau software dan AI.</p></div></li>
         </ol>
-        <div class="quote">
-          <div class="tag" style="color:#9aa8b3"><span lang="en">Team story</span><span lang="id">Cerita anggota tim</span> <span class="sample"><span lang="en">sample</span><span lang="id">contoh</span></span></div>
-          <blockquote lang="en">"I joined with nothing but the will to learn. Two years later I was programming PLCs for a production line."</blockquote>
-          <blockquote lang="id">"Saya masuk hanya dengan modal kemauan belajar. Dua tahun kemudian saya memprogram PLC untuk lini produksi."</blockquote>
-          <p><span lang="en">Team member name · Automation technician</span><span lang="id">Nama anggota · Teknisi otomasi</span></p>
-        </div>
       </div>
     </div>
   </section>
@@ -636,12 +619,6 @@ html[data-lang="id"] body [lang="en"] { display: none; }
         <article><div class="tag"><span lang="en">Social</span><span lang="id">Sosial</span></div><h3><span lang="en">Technology for communities</span><span lang="id">Teknologi untuk komunitas</span></h3><p lang="en">Helping schools, pesantren and small businesses with simple technology solutions.</p><p lang="id">Membantu sekolah, pesantren, dan UMKM dengan solusi teknologi sederhana.</p></article>
         <article><div class="tag"><span lang="en">Environment</span><span lang="id">Lingkungan</span></div><h3><span lang="en">Energy efficiency</span><span lang="id">Efisiensi energi</span></h3><p lang="en">Control systems designed to save electricity and reduce production waste.</p><p lang="id">Merancang sistem kendali yang menghemat listrik dan mengurangi limbah produksi.</p></article>
         <article><div class="tag"><span lang="en">Environment</span><span lang="id">Lingkungan</span></div><h3><span lang="en">Green action</span><span lang="id">Aksi hijau</span></h3><p lang="en">Tree planting and sensor-based environmental monitoring.</p><p lang="id">Penanaman pohon dan pemantauan lingkungan berbasis sensor.</p></article>
-      </div>
-      <div class="metric">
-        <div><strong>000</strong><span><span lang="en">training participants</span><span lang="id">peserta pelatihan</span></span></div>
-        <div><strong>000</strong><span><span lang="en">trees planted</span><span lang="id">pohon ditanam</span></span></div>
-        <div><strong>00%</strong><span><span lang="en">energy saved for clients</span><span lang="id">energi dihemat klien</span></span></div>
-        <div><span class="sample" style="align-self:center"><span lang="en">figures to come</span><span lang="id">angka menyusul</span></span></div>
       </div>
     </div>
   </section>
