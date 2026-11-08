@@ -178,22 +178,6 @@ section.block { padding-block: 4.5rem; border-bottom: 1px solid var(--line); scr
 .metric strong { font-family: var(--f-display); font-size: var(--s2); font-variant-numeric: tabular-nums; color: var(--ok); }
 .metric span { font-size: .9rem; color: var(--muted); }
 
-/* Kontak */
-.contact { display: grid; gap: 2.5rem; grid-template-columns: 1fr; }
-@media (min-width: 52rem) { .contact { grid-template-columns: 1fr 1.2fr; } }
-.contact dl { margin: 0; display: grid; gap: 1rem; }
-.contact dt { font-family: var(--f-mono); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-.contact dd { margin: 0; font-size: 1.1rem; user-select: all; }
-form { display: grid; gap: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 1.5rem; min-width: 0; }
-label { display: grid; gap: .35rem; font-size: .9rem; font-weight: 500; }
-input, select, textarea { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: .6rem .75rem; width: 100%; }
-textarea { min-height: 7rem; resize: vertical; }
-form button { justify-self: start; cursor: pointer; background: var(--accent); color: var(--on-accent); border: 0; font-family: var(--f-display); font-weight: 600; font-size: 1.1rem; letter-spacing: .06em; text-transform: uppercase; padding: .7rem 1.4rem; border-radius: 4px; }
-.form-msg { font-size: .9rem; color: var(--ok); }
-.form-msg.err { color: #d64545; }
-.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-form { position: relative; }
-
 /* Dukungan */
 .support { display: grid; gap: 2.5rem; grid-template-columns: 1fr; }
 @media (min-width: 56rem) { .support { grid-template-columns: 1.3fr 1fr; } }
@@ -224,7 +208,6 @@ html[data-lang="id"] body [lang="en"] { display: none; }
 .lang-switch { display: flex; border: 1px solid rgba(238,242,244,.3); border-radius: 4px; overflow: hidden; }
 .lang-switch button { background: none; border: 0; color: inherit; font-family: var(--f-mono); font-size: .78rem; letter-spacing: .06em; padding: .35rem .6rem; cursor: pointer; opacity: .7; }
 .lang-switch button[aria-pressed="true"] { background: var(--brand-teal); opacity: 1; color: #ffffff; }
-label > span { display: block; }
 
 /* Daun beringin di hero */
 .hero { position: relative; isolation: isolate; }
@@ -294,7 +277,6 @@ label > span { display: block; }
         <li><a href="#kolaborasi"><span lang="en">Partners</span><span lang="id">Kolaborasi</span></a></li>
         <li><a href="#karier"><span lang="en">Careers</span><span lang="id">Karier</span></a></li>
         <li><a href="#lestari"><span lang="en">Community</span><span lang="id">Sosial &amp; Alam</span></a></li>
-        <li><a href="#kontak"><span lang="en">Contact</span><span lang="id">Kontak</span></a></li>
       </ul>
     </nav>
   </div>
@@ -422,7 +404,7 @@ label > span { display: block; }
         <p lang="en">We are a team that loves automation, electronics and AI. We help factories run smoothly, give anyone willing to learn a chance to grow, and look after the nature around us.</p>
         <p lang="id">Kami tim yang mencintai otomasi, elektronika, dan AI. Kami membantu pabrik berjalan lancar, memberi kesempatan tumbuh bagi siapa pun yang mau belajar, dan menjaga alam di sekitar kita.</p>
         <div class="cta">
-          <a class="btn primary" href="#kontak"><span lang="en">Discuss a project</span><span lang="id">Diskusikan proyek</span></a>
+          <a class="btn primary" href="https://gamanlab.io"><span lang="en">Discuss a project</span><span lang="id">Diskusikan proyek</span></a>
           <a class="btn ghost" href="#karier"><span lang="en">Join the team</span><span lang="id">Bergabung dengan tim</span></a>
         </div>
       </div>
@@ -637,7 +619,7 @@ label > span { display: block; }
           <blockquote lang="en">"I joined without an engineering degree. Two years later I was programming PLCs for a production line."</blockquote>
           <blockquote lang="id">"Saya masuk tanpa ijazah teknik. Dua tahun kemudian saya memprogram PLC untuk lini produksi."</blockquote>
           <p><span lang="en">Team member name · Automation technician</span><span lang="id">Nama anggota · Teknisi otomasi</span></p>
-          <a class="btn primary" href="#kontak" style="justify-self:start"><span lang="en">Send your application</span><span lang="id">Kirim lamaran</span></a>
+          <a class="btn primary" href="https://gamanlab.io" style="justify-self:start"><span lang="en">Send your application</span><span lang="id">Kirim lamaran</span></a>
         </div>
       </div>
     </div>
@@ -665,41 +647,6 @@ label > span { display: block; }
       </div>
     </div>
   </section>
-
-  <section class="block" id="kontak">
-    <div class="wrap">
-      <div class="head">
-        <div class="tag"><b>09</b> · <span lang="en">Contact</span><span lang="id">Kontak</span></div>
-        <h2><span lang="en">Let's work together</span><span lang="id">Mari bekerja sama</span></h2>
-      </div>
-      <div class="contact">
-        <dl>
-          <div><dt><span lang="en">Address</span><span lang="id">Alamat</span></dt><dd>Purworejo, <span lang="en">Central Java, Indonesia</span><span lang="id">Jawa Tengah, Indonesia</span></dd></div>
-          <div><dt>Email</dt><dd>info@gamanlab.id</dd></div>
-        </dl>
-        <form id="contact-form" action="https://api.gamanlab.id/" method="post">
-          <label for="f-name"><span><span lang="en">Name</span><span lang="id">Nama</span></span><input id="f-name" name="name" required maxlength="100" autocomplete="name"></label>
-          <label for="f-email"><span>Email</span><input id="f-email" name="email" type="email" required maxlength="150" autocomplete="email"></label>
-          <input class="hp" type="text" name="website" id="f-website" tabindex="-1" autocomplete="off" aria-hidden="true">
-          <label for="f-topic"><span><span lang="en">Subject</span><span lang="id">Keperluan</span></span>
-            <select id="f-topic" name="topic">
-              <option data-en="Automation project" data-id="Proyek otomasi">Automation project</option>
-              <option data-en="Product inquiry" data-id="Informasi produk">Product inquiry</option>
-              <option data-en="Technical support / maintenance" data-id="Dukungan teknis / perawatan">Technical support / maintenance</option>
-              <option data-en="Partnership" data-id="Kerja sama / kemitraan">Partnership</option>
-              <option data-en="Job / internship application" data-id="Lamaran kerja / magang">Job / internship application</option>
-              <option data-en="Community activities" data-id="Kegiatan sosial">Community activities</option>
-            </select>
-          </label>
-          <label for="f-msg"><span><span lang="en">Message</span><span lang="id">Pesan</span></span><textarea id="f-msg" name="message" required maxlength="5000"></textarea></label>
-          <button type="submit" id="f-submit"><span lang="en">Send message</span><span lang="id">Kirim pesan</span></button>
-          <p class="form-msg" id="msg-sending" hidden><span lang="en">Sending…</span><span lang="id">Mengirim…</span></p>
-          <p class="form-msg" id="msg-ok" hidden><span lang="en">Thank you, your message has been sent. We will reply to your email soon.</span><span lang="id">Terima kasih, pesan Anda sudah terkirim. Kami akan segera membalas ke email Anda.</span></p>
-          <p class="form-msg err" id="msg-err" hidden><span lang="en">The message could not be sent. Please try again, or email us directly at info@gamanlab.id.</span><span lang="id">Pesan gagal dikirim. Silakan coba lagi, atau kirim email langsung ke info@gamanlab.id.</span></p>
-        </form>
-      </div>
-    </div>
-  </section>
 </main>
 
 <footer>
@@ -717,19 +664,6 @@ label > span { display: block; }
   btn.addEventListener('click', () => { btn.setAttribute('aria-expanded', String(btn.getAttribute('aria-expanded') !== 'true')); sync(); });
   menu.addEventListener('click', e => { if (e.target.closest('a') && mq.matches) { btn.setAttribute('aria-expanded', 'false'); sync(); } });
   mq.addEventListener('change', sync); sync();
-  const form = document.getElementById('contact-form');
-  const show = id => ['msg-sending', 'msg-ok', 'msg-err'].forEach(m => { document.getElementById(m).hidden = m !== id; });
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    const submit = document.getElementById('f-submit');
-    submit.disabled = true; show('msg-sending');
-    try {
-      const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } });
-      const data = await res.json().catch(() => ({}));
-      if (res.ok && data.ok) { show('msg-ok'); form.reset(); } else { show('msg-err'); }
-    } catch (err) { show('msg-err'); }
-    submit.disabled = false;
-  });
 
   // Bahasa: default English, pilihan disimpan di browser pengunjung
   function setLang(lang) {
@@ -737,7 +671,6 @@ label > span { display: block; }
     root.dataset.lang = lang;
     root.lang = lang;
     document.querySelectorAll('.lang-switch button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
-    document.querySelectorAll('option[data-en]').forEach(o => { o.textContent = o.dataset[lang]; });
     try { localStorage.setItem('gamanlab-lang', lang); } catch (e) {}
   }
   document.querySelectorAll('.lang-switch button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
